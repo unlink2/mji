@@ -82,7 +82,7 @@ const MjiMapEntry MJI_MAP[] = {
     {"alembic", "\u2697\ufe0f", "Perform experiments"},
     {"mag", "\U0001f50d\ufe0f", "Improved SEO"},
     {"label", "\U0001f3f7\ufe0f", "Add or update types"},
-    {"seeling", "\U0001f331", "Add or update seed files"},
+    {"seelding", "\U0001f331", "Add or update seed files"},
     {"triangle-flag", "\U0001f6a9", "Add, update, or remove feature flags"},
     {"goal", "\U0001f945", "Catch errors"},
     {"dizzy", "\U0001f4ab", "Add or update animations"},
