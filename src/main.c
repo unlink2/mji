@@ -22,6 +22,8 @@ static struct argp_option options[] = {
     {"list", 'l', NULL, 0, "List all mji entires"},
     {"post", 'p', "POSTFIX", 0, "Postfix for mji output"},
     {"pre", 'b', "PREFIX", 0, "Prefix for mji output"},
+    {"filter", 'f', "FILTER", 0,
+     "Filter input for strings starting with filter"},
     {0}};
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
@@ -29,12 +31,17 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   switch (key) {
   case 'l':
     mji_list((MjiMapEntry *)MJI_MAP);
+    exit(0); // NOLINT
     break;
   case 'p':
     cfg->post = arg;
     break;
   case 'b':
     cfg->pre = arg;
+    break;
+  case 'f':
+    mji_filter(stdin, stdout, arg);
+    exit(0); // NOLINT
     break;
   case ARGP_KEY_ARG:
     /*

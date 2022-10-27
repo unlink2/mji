@@ -1,5 +1,7 @@
 #include "mjimap.h"
 #include "config.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "gitmoji.h"
@@ -25,4 +27,18 @@ Error mji_find(MjiMapEntry *map, const char *name) {
     map++;
   }
   return MJI_NOT_FOUND;
+}
+
+void mji_filter(FILE *input, FILE *output, char *filter) {
+  unsigned int read = 0;
+  char *line = NULL;
+  unsigned long len = 0;
+
+  while ((read = getline(&line, &len, input)) != -1) {
+    if (strncmp(line, filter, strlen(filter)) == 0) {
+      fprintf(output, "%s", line);
+    }
+  }
+
+  free(line);
 }

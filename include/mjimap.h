@@ -18,4 +18,6 @@ extern const MjiMapEntry MJI_MAP[];
 void mji_list(MjiMapEntry *map);
 Error mji_find(MjiMapEntry *map, const char *name);
 
+void mji_filter(FILE *input, FILE *output, char *filter);
+
 #endif
