@@ -1,0 +1,12 @@
+name=basic test
+command=./build/mji white-check
+
+data=-
+
+expected=tests/basic.txt
+
+# it is possible to only test lines that begin with a prefix
+test-line-prefix=
+
+# echo stdout of command back
+echo=false

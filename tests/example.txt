@@ -1,2 +1,0 @@
-Hello world!
-scl version 0

@@ -39,7 +39,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 # These files will have .d instead of .o as the output.
 CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wpedantic -g $(EX_CC_FLAGS) -DTYPE=$(TYPE)
 
-LDFLAGS := $(EX_LD_FLAGS) -lscl
+LDFLAGS := $(EX_LD_FLAGS) # -lscl
 
 # The final build step.
 # This builds a binary, shared or static library
