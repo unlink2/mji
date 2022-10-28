@@ -11,8 +11,10 @@ int mji_is_end(MjiMapEntry *entry) {
 }
 
 void mji_list(MjiMapEntry *map) {
+  char fmt[32];
   while (!mji_is_end(map)) {
-    printf("%s\t%s | %s\n", map->value, map->name, map->desc);
+    sprintf(fmt, "%%%lus\t%%s | %%s\n", 5 - strlen(map->value));
+    printf(fmt, map->value, map->name, map->desc);
 
     map++;
   }
