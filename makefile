@@ -8,7 +8,7 @@ LIB_INSTALL_DIR := /usr/local/lib
 INC_INSTALL_DIR := /usr/local/include/$(NAME)/
 
 # valid inputs: bin, a (static lib), so (shared lib), h (header only)
-TYPE := bin 
+TYPE := bin
 
 # configure how scl should be used 
 SCL_INC := scl/include  
@@ -45,7 +45,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 # These files will have .d instead of .o as the output.
 CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wpedantic -g $(EX_CC_FLAGS) -DTYPE=$(TYPE)
 
-LDFLAGS := $(EX_LD_FLAGS) $(SCL_LIB)
+LDFLAGS := $(EX_LD_FLAGS) $(SCL_LIB) 
 
 # The final build step.
 # This builds a binary, shared or static library
