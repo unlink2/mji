@@ -20,10 +20,32 @@ void mji_list(MjiMapEntry *map) {
   }
 }
 
+void mji_pre() { printf("%s", config.pre); }
+
+void mji_post() { printf("%s", config.post); }
+
+Error mji_find_or(MjiMapEntry *map, const char *name) {
+  if (name[0] == MJI_SEPARATOR && strlen(name) == 1) {
+    config.find_mji = TRUE;
+    mji_post();
+    return MJI_OK;
+  }
+
+  if (!config.find_mji) {
+    printf(" %s", name);
+    return MJI_OK;
+  }
+
+  config.find_mji = FALSE;
+
+  return mji_find(map, name);
+}
+
 Error mji_find(MjiMapEntry *map, const char *name) {
   while (!mji_is_end(map)) {
     if (strcmp(map->name, name) == 0) {
-      printf("%s%s%s", config.pre, map->value, config.post);
+      mji_pre();
+      printf("%s", map->value);
       return MJI_OK;
     }
     map++;

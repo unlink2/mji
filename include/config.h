@@ -2,10 +2,14 @@
 #define CONFIG_H_
 
 #include "error.h"
+#include "types.h"
 
 typedef struct Config {
   const char *pre;
   const char *post;
+
+  bool find_mji;
+  
   Error err;
 } Config;
 

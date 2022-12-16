@@ -53,7 +53,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     */
 
     // all args are an emoji name, go find them in the map!
-    cfg->err |= mji_find((MjiMapEntry *)MJI_MAP, arg);
+    cfg->err |= mji_find_or((MjiMapEntry *)MJI_MAP, arg);
     break;
   case ARGP_KEY_END:
     if (state->arg_num < 1) {
@@ -71,7 +71,9 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
 
 int main(int argc, char **argv) {
   config = config_init();
+
   argp_parse(&argp, argc, argv, 0, 0, &config); // NOLINT
+  mji_post();
 
   return config.err;
 }

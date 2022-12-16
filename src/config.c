@@ -2,6 +2,6 @@
 Config config;
 
 Config config_init() {
-  Config c = {"", "\n", MJI_OK};
+  Config c = {"", "\n", TRUE, MJI_OK};
   return c;
 }
