@@ -10,16 +10,17 @@ INC_INSTALL_DIR := /usr/local/include/$(NAME)/
 # valid inputs: bin, a (static lib), so (shared lib), h (header only)
 TYPE := bin
 
-# configure how scl should be used 
-SCL_INC := scl/include  
-SCL_SRC := scl/src
-SCL_A := # /usr/local/lib/libscl.a  
-SCL_LIB := # $(SCL_A) -lscl
+# which porgram from the project 
+# to build 
+# values: 
+# MPASM = build assembler  
+# MPPATCH = build patch tool
+PRG := MPASM  
 
 BUILD_DIR := ./build
 BUILD_DIR_TEST := $(BUILD_DIR)/build_test
-SRC_DIRS := ./src $(SCL_SRC) 
-INC_DIRS := ./include $(SCL_INC)
+SRC_DIRS := ./src  
+INC_DIRS := ./include 
 EX_CC_FLAGS :=
 EX_LD_FLAGS :=
 # Find all the C and C++ files we want to compile
@@ -43,9 +44,9 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 # The -MMD and -MP flags together generate Makefiles for us!
 # These files will have .d instead of .o as the output.
-CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wpedantic -g $(EX_CC_FLAGS) -DTYPE=$(TYPE)
+CFLAGS := $(INC_FLAGS) -D$(PRG) -MMD -MP -Wall -Wpedantic -g $(EX_CC_FLAGS) -DTYPE=$(TYPE)
 
-LDFLAGS := $(EX_LD_FLAGS) $(SCL_LIB) 
+LDFLAGS := $(EX_LD_FLAGS)  
 
 # The final build step.
 # This builds a binary, shared or static library
@@ -75,18 +76,12 @@ build:
 # Build test task
 .PHONY: build_test
 build_test: 
-	make EX_CC_FLAGS=-DTEST=1 EX_LD_FLAGS=-lcmocka TARGET_EXEC=$(TEST_EXEC) TYPE=bin 
+	make EX_CC_FLAGS="-DTEST=1 -DDEBUG=1" EX_LD_FLAGS=-lcmocka TARGET_EXEC=$(TEST_EXEC) TYPE=bin 
 
 .PHONY: test 
 test: 
 	make build_test BUILD_DIR=$(BUILD_DIR_TEST) 
 	make run TARGET_EXEC=$(TEST_EXEC) BUILD_DIR=$(BUILD_DIR_TEST) TYPE=bin
-
-# run integration tests 
-.PHONY: int
-int:
-	make 
-	trialrun tests/*.tr
 
 # Run task 
 .PHONY: run
@@ -120,6 +115,16 @@ lint:
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
+
+.PHONY: setup
+setup:
+	make getmods
+
+# make all targets 
+.PHONY: all 
+all: 
+	make PRG=MPASM NAME=mpasm
+
 
 # installs the binary, shared library or static library  
 .PHONY: install 
