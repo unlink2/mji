@@ -8,11 +8,11 @@ lazy_static! {
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Config {
-    #[arg(short, long)]
+    #[arg(short, long, default_value_t = false)]
     pub list: bool,
-    #[arg(long)]
+    #[arg(long, default_value_t = String::from(""))]
     pub pre: String,
-    #[arg(long)]
+    #[arg(long, default_value_t = String::from("\n"))]
     pub post: String,
 
     pub inputs: Vec<String>,
