@@ -9,11 +9,13 @@ lazy_static! {
 #[command(author, version, about, long_about = None)]
 pub struct Config {
     #[arg(short, long)]
-    list: bool,
+    pub list: bool,
     #[arg(long)]
-    pre: String,
+    pub pre: String,
     #[arg(long)]
-    post: String,
+    pub post: String,
+
+    pub inputs: Vec<String>,
 }
 
 impl Default for Config {
@@ -22,6 +24,7 @@ impl Default for Config {
             list: false,
             pre: "".into(),
             post: "".into(),
+            inputs: vec![],
         }
     }
 }

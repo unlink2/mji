@@ -16,13 +16,13 @@ impl MjiMapEntry {
     }
 }
 
-type MjiMap = HashMap<String, MjiMapEntry>;
+pub type MjiMap = HashMap<String, MjiMapEntry>;
 
 pub fn list(map: &MjiMap) {}
 
-pub fn find_pr(map: &MjiMap, name: &str) {}
+pub fn find_or<T: AsRef<str>>(map: &MjiMap, inputs: &[T]) {}
 
-pub fn find(map: &MjiMap, name: &str) {}
+pub fn find<T: AsRef<str>>(map: &MjiMap, inputs: &[T]) {}
 
 fn pre() {}
 
