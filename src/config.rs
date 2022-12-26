@@ -8,7 +8,6 @@ lazy_static! {
 }
 
 const HEADER_COMMAND_DEFAULT: &str = "git";
-const HEADER_ARGS_DEFAULT: Vec<String> = vec!["rev-parse".to_owned(), "--abbrev-ref".to_owned(), "HEAD".to_owned()];
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum HeaderMode {
@@ -31,7 +30,7 @@ impl Display for HeaderMode {
     }
 }
 
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 pub struct Config {
     #[arg(short, long, default_value_t = false)]
@@ -46,8 +45,12 @@ pub struct Config {
     #[arg(long, default_value_t = String::from(HEADER_COMMAND_DEFAULT))]
     pub header_cmd: String,
 
-    #[arg(long, default_value = HEADER_ARGS_DEFAULT]
-    pub header_args: Vec<String>, 
+    #[arg(long, default_values_t = vec![
+        "rev-parse".to_owned(),
+        "--abbrev-ref".to_owned(),
+        "HEAD".to_owned(),
+    ])]
+    pub header_args: Vec<String>,
 
     pub inputs: Vec<String>,
 }
@@ -60,7 +63,8 @@ impl Default for Config {
             post: "".into(),
             inputs: vec![],
             header_mode: HeaderMode::Command,
-            header_cmd: HEADER_COMMAND_DEFAULT.into(),
+            header_cmd: "".into(),
+            header_args: vec![],
         }
     }
 }

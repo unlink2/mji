@@ -38,11 +38,14 @@ pub fn header() -> Result<(), Error> {
     match CFG.header_mode {
         HeaderMode::Static => println!("{}", CFG.header_cmd),
         HeaderMode::Command => {
-            let output = Command::new(CFG.header_cmd.to_owned()).output();
+            let output = Command::new(CFG.header_cmd.to_owned())
+                .args(&CFG.header_args)
+                .output();
             if let Ok(output) = output {
                 println!(
                     "{}",
-                    String::from_utf8(output.stdout).unwrap_or("..".into())
+                    String::from_utf8(output.stdout)
+                        .unwrap_or("<output is not utf8 encoded>".into())
                 );
             } else {
                 return Err(Error::CommandFailed);
