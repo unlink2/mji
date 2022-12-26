@@ -62,6 +62,9 @@ pub struct Config {
     pub commit_cmd: String,
 
     pub inputs: Vec<String>,
+
+    #[arg(last = true)]
+    pub escaped: Vec<String>,
 }
 
 impl Default for Config {
@@ -77,6 +80,7 @@ impl Default for Config {
             header_post: "".into(),
             commit: false,
             commit_cmd: "".into(),
+            escaped: vec![],
         }
     }
 }

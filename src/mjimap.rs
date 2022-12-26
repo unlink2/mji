@@ -47,6 +47,7 @@ pub fn commit(buffer: &[u8]) -> Result<(), Error> {
 
     let output = Command::new(parsed_cmd.first().unwrap_or(&"".to_string()))
         .args(&parsed_cmd[1..])
+        .args(&CFG.escaped)
         .status();
 
     if output.is_ok() {
