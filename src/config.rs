@@ -47,7 +47,7 @@ pub struct Config {
     #[arg(long, default_value_t = String::from(HEADER_COMMAND_DEFAULT))]
     pub header_cmd: String,
 
-    #[arg(long, default_value_t = String::from("🔀 "))]
+    #[arg(long, default_value_t = String::from("📫 "))]
     pub header_pre: String,
     #[arg(long, default_value_t = String::from("\n"))]
     pub header_post: String,
