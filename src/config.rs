@@ -47,6 +47,9 @@ pub struct Config {
     #[arg(long, default_value_t = String::from(HEADER_COMMAND_DEFAULT))]
     pub header_cmd: String,
 
+    // TODO talk about the icon for a commit header... 
+    //      reasoning here: a commit is signaled by leaving a
+    //      commit message...
     #[arg(long, default_value_t = String::from("📫 "))]
     pub header_pre: String,
     #[arg(long, default_value_t = String::from("\n"))]
