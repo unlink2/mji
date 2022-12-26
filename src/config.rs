@@ -7,10 +7,11 @@ lazy_static! {
     pub static ref CFG: Config = Config::new();
 }
 
-const HEADER_COMMAND_DEFAULT: &str = "git";
+const HEADER_COMMAND_DEFAULT: &str = "git rev-parse --abbrev-ref HEAD";
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum HeaderMode {
+    NoHeader,
     Command,
     Static,
 }
@@ -26,6 +27,7 @@ impl Display for HeaderMode {
         match self {
             Self::Command => write!(f, "command"),
             Self::Static => write!(f, "static"),
+            Self::NoHeader => write!(f, "no-header"),
         }
     }
 }
@@ -45,13 +47,6 @@ pub struct Config {
     #[arg(long, default_value_t = String::from(HEADER_COMMAND_DEFAULT))]
     pub header_cmd: String,
 
-    #[arg(long, default_values_t = vec![
-        "rev-parse".to_owned(),
-        "--abbrev-ref".to_owned(),
-        "HEAD".to_owned(),
-    ])]
-    pub header_args: Vec<String>,
-
     pub inputs: Vec<String>,
 }
 
@@ -64,7 +59,6 @@ impl Default for Config {
             inputs: vec![],
             header_mode: HeaderMode::Command,
             header_cmd: "".into(),
-            header_args: vec![],
         }
     }
 }

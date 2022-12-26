@@ -38,8 +38,14 @@ pub fn header() -> Result<(), Error> {
     match CFG.header_mode {
         HeaderMode::Static => println!("{}", CFG.header_cmd),
         HeaderMode::Command => {
-            let output = Command::new(CFG.header_cmd.to_owned())
-                .args(&CFG.header_args)
+            let parsed_cmd = CFG
+                .header_cmd
+                .split_whitespace()
+                .map(|x| x.to_owned())
+                .collect::<Vec<String>>();
+
+            let output = Command::new(parsed_cmd.first().unwrap_or(&"".to_string()))
+                .args(&parsed_cmd[1..])
                 .output();
             if let Ok(output) = output {
                 println!(
@@ -51,6 +57,7 @@ pub fn header() -> Result<(), Error> {
                 return Err(Error::CommandFailed);
             }
         }
+        HeaderMode::NoHeader => {}
     }
 
     Ok(())
