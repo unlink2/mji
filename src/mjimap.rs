@@ -36,7 +36,7 @@ pub fn list(map: &MjiMap) {
 
 pub fn header() -> Result<(), Error> {
     match CFG.header_mode {
-        HeaderMode::Static => println!("{}", CFG.header_cmd),
+        HeaderMode::Static => print!("{}{}{}", CFG.header_pre, CFG.header_cmd, CFG.header_post),
         HeaderMode::Command => {
             let parsed_cmd = CFG
                 .header_cmd
@@ -48,10 +48,12 @@ pub fn header() -> Result<(), Error> {
                 .args(&parsed_cmd[1..])
                 .output();
             if let Ok(output) = output {
-                println!(
-                    "{}",
+                print!(
+                    "{}{}{}",
+                    CFG.header_pre,
                     String::from_utf8(output.stdout)
-                        .unwrap_or("<output is not utf8 encoded>".into())
+                        .unwrap_or("<output is not utf8 encoded>".into()),
+                    CFG.header_post
                 );
             } else {
                 return Err(Error::CommandFailed);
