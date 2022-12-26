@@ -47,13 +47,19 @@ pub struct Config {
     #[arg(long, default_value_t = String::from(HEADER_COMMAND_DEFAULT))]
     pub header_cmd: String,
 
-    // TODO talk about the icon for a commit header... 
+    // TODO talk about the icon for a commit header...
     //      reasoning here: a commit is signaled by leaving a
     //      commit message...
     #[arg(long, default_value_t = String::from("📫 "))]
     pub header_pre: String,
     #[arg(long, default_value_t = String::from("\n"))]
     pub header_post: String,
+
+    #[arg(long, default_value_t = false)]
+    pub commit: bool,
+
+    #[arg(long, default_value_t = String::from("git commit -e -am "))]
+    pub commit_cmd: String,
 
     pub inputs: Vec<String>,
 }
@@ -69,6 +75,8 @@ impl Default for Config {
             header_cmd: "".into(),
             header_pre: "".into(),
             header_post: "".into(),
+            commit: false,
+            commit_cmd: "".into(),
         }
     }
 }
