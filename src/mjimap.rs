@@ -1,6 +1,6 @@
-use crate::{Error, CFG};
-use console::{style, Emoji, Term};
-use std::{collections::HashMap, fmt::Display};
+use crate::{config::HeaderMode, Error, CFG};
+use console::{style, Emoji};
+use std::{collections::HashMap, process::Command};
 
 #[derive(Clone)]
 pub struct MjiMapEntry {
@@ -22,7 +22,6 @@ impl MjiMapEntry {
 pub type MjiMap = HashMap<String, MjiMapEntry>;
 
 pub fn list(map: &MjiMap) {
-    let term = Term::stdout();
     let name_width = 0;
     let val_width = 10;
     map.iter().for_each(|(_key, c)| {
@@ -35,7 +34,27 @@ pub fn list(map: &MjiMap) {
     });
 }
 
+pub fn header() -> Result<(), Error> {
+    match CFG.header_mode {
+        HeaderMode::Static => println!("{}", CFG.header_cmd),
+        HeaderMode::Command => {
+            let output = Command::new(CFG.header_cmd.to_owned()).output();
+            if let Ok(output) = output {
+                println!(
+                    "{}",
+                    String::from_utf8(output.stdout).unwrap_or("..".into())
+                );
+            } else {
+                return Err(Error::CommandFailed);
+            }
+        }
+    }
+
+    Ok(())
+}
+
 pub fn find_or(map: &MjiMap, inputs: &[&str]) -> Result<(), Error> {
+    header()?;
     let mut should_find = true;
     for input in inputs {
         if should_find {
