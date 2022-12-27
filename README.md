@@ -11,13 +11,23 @@
 
 ## Installation
 
-This program requires the latest stable release of rust.
-Once rust is set up correclty simply clone the repository.
-Then run:
+## From source 
 
 ```sh
 cargo build # to build or
 cargo install  # to install 
+```
+
+## From cargo binary 
+
+```sh
+cargo install mji   
+```
+
+## From AUR
+
+```sh
+yay -S mji 
 ```
 
 ## Usage
