@@ -77,7 +77,7 @@ fn mji_hints(map: &MjiMap) -> HashSet<CommandHint> {
 }
 
 pub fn prompt(_f: &mut dyn Write, map: &MjiMap) {
-    println!("Starting commit. Terminate input with CTRL-D.");
+    println!("Enter your commit message. Terminate input with CTRL-D.");
 
     let h = MjiHinter {
         hints: mji_hints(map),
