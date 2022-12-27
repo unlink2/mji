@@ -1,6 +1,6 @@
 [package]
 name = "mji"
-description = ""
+description = "A tool for easily creating git commit messages using gitmoji"
 version = "0.1.0"
 edition = "2021"
 authors = ["Lukas Krickl <lukas@krickl.dev>"]
