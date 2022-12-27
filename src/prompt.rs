@@ -8,6 +8,15 @@ use rustyline_derive::{Completer, Helper, Highlighter, Validator};
 use std::collections::HashSet;
 use std::io::Write;
 
+#[macro_export]
+macro_rules! print_error {
+    ($expression:expr) => {
+        if let Err(error) = $expression {
+            println!("{}", error);
+        }
+    };
+}
+
 #[derive(Completer, Helper, Validator, Highlighter)]
 struct MjiHinter {
     hints: HashSet<CommandHint>,
