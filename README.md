@@ -22,6 +22,8 @@ cargo install  # to install
 
 ## Usage
 
+![Gif showing mji in action](https://raw.githubusercontent.com/unlink2/misc-resources/main/mji-usage.gif)
+
 Example usage:
 
 ```sh 
