@@ -9,10 +9,11 @@ use std::collections::HashSet;
 use std::io::Write;
 
 #[macro_export]
-macro_rules! print_error {
+macro_rules! print_error_and_exit {
     ($expression:expr) => {
         if let Err(error) = $expression {
             println!("{}", error);
+            std::process::exit(-1);
         }
     };
 }

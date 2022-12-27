@@ -39,6 +39,16 @@ mji :sparkles: message 1 - :sparkles: message 2 # run mji in non-interactive mod
 The default commands for the header and commits can be change using the enviornment variables 
 `MJI_HEADER_COMMAND` and `MJI_COMMIT_COMMAND`.
 
+### Custom emojis 
+
+The program will look for a configuration file called `mji.toml` in the system's default configuration
+location (e.g. `$HOME/.config` on Linux). The config location can also be changed using a command line parameter. 
+The file should have the following structure (one line per emoji): 
+
+```toml
+crab = {name = "crab", value = "🦀", desc = "Made with Rust"} 
+```
+
 ## License
 
 This program is distributed under the terms of the MIT License.

@@ -4,6 +4,11 @@ use clap::{Parser, ValueEnum};
 use lazy_static::lazy_static;
 use std::sync::RwLock;
 
+use crate::{
+    gitmoji::GITMOJI,
+    mjimap::{mji_map_from_file, mji_map_join, MjiMap},
+};
+
 lazy_static! {
     pub static ref CFG: RwLock<Config> = RwLock::new(Config::new());
 }
@@ -14,6 +19,19 @@ fn header_default_command() -> String {
 
 fn commit_default_command() -> String {
     std::env::var("MJI_COMMIT_COMMAND").unwrap_or("git commit -e -am ".into())
+}
+
+fn get_default_map_path() -> String {
+    let path = dirs::preference_dir()
+        .unwrap_or("./".into())
+        .join("mji.toml");
+
+    if path.exists() {
+        path.to_str().unwrap_or("-").to_owned()
+    } else {
+        // FIXME do we need a sentinel value to make clap happy?
+        "-".to_owned()
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
@@ -68,6 +86,12 @@ pub struct Config {
     #[arg(long, default_value_t = commit_default_command())]
     pub commit_cmd: String,
 
+    #[arg(long, default_value_t = false)]
+    no_join_default_map: bool,
+
+    #[arg(long, default_value_t = get_default_map_path())]
+    custom_map_path: String,
+
     pub inputs: Vec<String>,
 
     #[arg(last = true)]
@@ -88,6 +112,8 @@ impl Default for Config {
             commit: false,
             commit_cmd: "".into(),
             escaped: vec![],
+            no_join_default_map: false,
+            custom_map_path: "".into(),
         }
     }
 }
@@ -95,5 +121,21 @@ impl Default for Config {
 impl Config {
     pub fn new() -> Self {
         Self::parse()
+    }
+
+    pub fn mji_map(&self) -> anyhow::Result<MjiMap> {
+        Ok(if self.custom_map_path != "-" {
+            let loaded = mji_map_from_file(&self.custom_map_path)?;
+
+            if self.no_join_default_map {
+                loaded
+            } else {
+                let mut result = GITMOJI.clone();
+                mji_map_join(&mut result, &loaded);
+                result
+            }
+        } else {
+            GITMOJI.clone()
+        })
     }
 }

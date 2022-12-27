@@ -13,7 +13,10 @@ repository = "https://github.com/unlink2/mji"
 anyhow = "1.0.68"
 clap = { version = "4.0.32", features = ["derive"] }
 console = "0.15.2"
+dirs = "4.0.0"
 lazy_static = "1.4.0"
 rustyline = "10.0.0"
 rustyline-derive = "0.7.0"
+serde = { version = "1.0.152", features = ["derive"] }
 thiserror = "1.0.38"
+toml = "0.5.10"
