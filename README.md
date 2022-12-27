@@ -11,20 +11,20 @@
 
 ## Installation
 
-## From source 
+### From source 
 
 ```sh
 cargo build # to build or
 cargo install  # to install 
 ```
 
-## From cargo binary 
+### From cargo binary 
 
 ```sh
 cargo install mji   
 ```
 
-## From AUR
+### From AUR
 
 ```sh
 yay -S mji 
