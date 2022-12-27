@@ -14,4 +14,6 @@ anyhow = "1.0.68"
 clap = { version = "4.0.32", features = ["derive"] }
 console = "0.15.2"
 lazy_static = "1.4.0"
+rustyline = "10.0.0"
+rustyline-derive = "0.7.0"
 thiserror = "1.0.38"
