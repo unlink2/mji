@@ -22,6 +22,21 @@ cargo install  # to install
 
 ## Usage
 
+Example usage:
+
+```sh 
+mji --help # display all options 
+
+mji # start interactive prompt 
+
+mji --commit # start prompt mode and run commit command (defaults to git commit -e -am <mji output>)
+
+mji sparkles message 1 - sparkles message 2 # run mji in non-interactive mode 
+```
+
+The default commands for the header and commits can be change using the enviornment variables 
+`MJI_HEADER_COMMAND` and `MJI_COMMIT_COMMAND`.
+
 ## License
 
 This program is distributed under the terms of the MIT License.
