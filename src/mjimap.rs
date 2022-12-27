@@ -1,10 +1,11 @@
 use crate::{config::HeaderMode, Error, CFG};
 use console::{style, Emoji};
-use std::{collections::HashMap, io::Write, process::Command};
+use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, fs, io::Write, process::Command};
 
 const MJI_WRAPPER: char = ':';
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct MjiMapEntry {
     pub name: String,
     pub value: String,
@@ -30,6 +31,17 @@ impl MjiMapEntry {
 }
 
 pub type MjiMap = HashMap<String, MjiMapEntry>;
+
+pub fn mji_map_from_file(path: &str) -> anyhow::Result<MjiMap> {
+    let data = fs::read_to_string(path)?;
+    Ok(toml::from_str(&data)?)
+}
+
+pub fn mji_map_join(map: &mut MjiMap, with: &MjiMap) {
+    with.iter().for_each(|(key, value)| {
+        map.insert(key.to_owned(), value.clone());
+    });
+}
 
 pub fn list(f: &mut dyn Write, map: &MjiMap) {
     let name_width = 0;
