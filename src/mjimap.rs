@@ -2,6 +2,8 @@ use crate::{config::HeaderMode, Error, CFG};
 use console::{style, Emoji};
 use std::{collections::HashMap, io::Write, process::Command};
 
+const MJI_WRAPPER: char = ':';
+
 #[derive(Clone)]
 pub struct MjiMapEntry {
     pub name: String,
@@ -16,6 +18,10 @@ impl MjiMapEntry {
             value: value.into(),
             desc: desc.into(),
         }
+    }
+
+    pub fn hint_name(&self) -> String {
+        format!("{}{}{}", MJI_WRAPPER, self.name, MJI_WRAPPER)
     }
 }
 
@@ -103,15 +109,20 @@ pub fn header(f: &mut dyn Write) -> Result<(), Error> {
 
 pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), Error> {
     header(f)?;
-    let mut should_find = true;
+
+    let mut first = true;
+
     for input in inputs {
-        if should_find {
+        if input.starts_with(MJI_WRAPPER) && input.ends_with(MJI_WRAPPER) {
             let mji = find(map, input)?;
             pre(f);
+            if !first {
+                write!(f, " ").unwrap();
+            }
             write!(f, "{}", mji.value).unwrap();
-            should_find = false;
+            first = false;
         } else if input == &"-" {
-            should_find = true;
+            first = true;
             post(f);
         } else {
             write!(f, " {input}").unwrap();
@@ -122,6 +133,9 @@ pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), E
 }
 
 pub fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
+    let input = input.strip_prefix(MJI_WRAPPER).unwrap_or(input);
+    let input = input.strip_suffix(MJI_WRAPPER).unwrap_or(input);
+
     if let Some(mji) = map.get(input) {
         Ok(mji.clone())
     } else {
