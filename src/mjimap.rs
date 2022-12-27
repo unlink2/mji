@@ -38,6 +38,8 @@ pub fn list(f: &mut dyn Write, map: &MjiMap) {
 
 pub fn commit(buffer: &[u8]) -> Result<(), Error> {
     let mut parsed_cmd = CFG
+        .read()
+        .unwrap()
         .commit_cmd
         .split_whitespace()
         .map(|x| x.to_owned())
@@ -47,7 +49,7 @@ pub fn commit(buffer: &[u8]) -> Result<(), Error> {
 
     let output = Command::new(parsed_cmd.first().unwrap_or(&"".to_string()))
         .args(&parsed_cmd[1..])
-        .args(&CFG.escaped)
+        .args(&CFG.read().unwrap().escaped)
         .status();
 
     if output.is_ok() {
@@ -58,12 +60,19 @@ pub fn commit(buffer: &[u8]) -> Result<(), Error> {
 }
 
 pub fn header(f: &mut dyn Write) -> Result<(), Error> {
-    match CFG.header_mode {
-        HeaderMode::Static => {
-            write!(f, "{}{}{}", CFG.header_pre, CFG.header_cmd, CFG.header_post).unwrap()
-        }
+    match CFG.read().unwrap().header_mode {
+        HeaderMode::Static => write!(
+            f,
+            "{}{}{}",
+            CFG.read().unwrap().header_pre,
+            CFG.read().unwrap().header_cmd,
+            CFG.read().unwrap().header_post
+        )
+        .unwrap(),
         HeaderMode::Command => {
             let parsed_cmd = CFG
+                .read()
+                .unwrap()
                 .header_cmd
                 .split_whitespace()
                 .map(|x| x.to_owned())
@@ -76,10 +85,10 @@ pub fn header(f: &mut dyn Write) -> Result<(), Error> {
                 write!(
                     f,
                     "{}{}{}",
-                    CFG.header_pre,
+                    CFG.read().unwrap().header_pre,
                     String::from_utf8(output.stdout)
                         .unwrap_or("<output is not utf8 encoded>".into()),
-                    CFG.header_post
+                    CFG.read().unwrap().header_post
                 )
                 .unwrap();
             } else {
@@ -105,7 +114,7 @@ pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), E
             should_find = true;
             post(f);
         } else {
-            write!(f, " {}", input).unwrap();
+            write!(f, " {input}").unwrap();
         }
     }
     post(f);
@@ -121,9 +130,9 @@ pub fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
 }
 
 fn pre(f: &mut dyn Write) {
-    write!(f, "{}", CFG.pre).unwrap();
+    write!(f, "{}", CFG.read().unwrap().pre).unwrap();
 }
 
 fn post(f: &mut dyn Write) {
-    write!(f, "{}", CFG.post).unwrap();
+    write!(f, "{}", CFG.read().unwrap().post).unwrap();
 }

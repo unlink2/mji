@@ -2,9 +2,10 @@ use std::fmt::Display;
 
 use clap::{Parser, ValueEnum};
 use lazy_static::lazy_static;
+use std::sync::RwLock;
 
 lazy_static! {
-    pub static ref CFG: Config = Config::new();
+    pub static ref CFG: RwLock<Config> = RwLock::new(Config::new());
 }
 
 const HEADER_COMMAND_DEFAULT: &str = "git rev-parse --abbrev-ref HEAD";
@@ -32,7 +33,7 @@ impl Display for HeaderMode {
     }
 }
 
-#[derive(Parser)]
+#[derive(Parser, Clone)]
 #[command(author, version, about, long_about = None)]
 pub struct Config {
     #[arg(short, long, default_value_t = false)]
