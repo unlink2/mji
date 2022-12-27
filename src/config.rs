@@ -8,7 +8,13 @@ lazy_static! {
     pub static ref CFG: RwLock<Config> = RwLock::new(Config::new());
 }
 
-const HEADER_COMMAND_DEFAULT: &str = "git rev-parse --abbrev-ref HEAD";
+fn header_default_command() -> String {
+    std::env::var("MJI_HEADER_COMMAND").unwrap_or("git rev-parse --abbrev-ref HEAD".into())
+}
+
+fn commit_default_command() -> String {
+    std::env::var("MJI_COMMIT_COMMAND").unwrap_or("git commit -e -am ".into())
+}
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum HeaderMode {
@@ -45,7 +51,7 @@ pub struct Config {
 
     #[arg(long, default_value_t = HeaderMode::Command)]
     pub header_mode: HeaderMode,
-    #[arg(long, default_value_t = String::from(HEADER_COMMAND_DEFAULT))]
+    #[arg(long, default_value_t = header_default_command())]
     pub header_cmd: String,
 
     // TODO talk about the icon for a commit header...
@@ -59,7 +65,7 @@ pub struct Config {
     #[arg(long, default_value_t = false)]
     pub commit: bool,
 
-    #[arg(long, default_value_t = String::from("git commit -e -am "))]
+    #[arg(long, default_value_t = commit_default_command())]
     pub commit_cmd: String,
 
     pub inputs: Vec<String>,
