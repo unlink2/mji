@@ -23,6 +23,10 @@ impl MjiMapEntry {
     pub fn hint_name(&self) -> String {
         format!("{}{}{}", MJI_WRAPPER, self.name, MJI_WRAPPER)
     }
+
+    pub fn is_mji(input: &str) -> bool {
+        input.trim().starts_with(MJI_WRAPPER) && input.trim().ends_with(MJI_WRAPPER)
+    }
 }
 
 pub type MjiMap = HashMap<String, MjiMapEntry>;
@@ -113,7 +117,7 @@ pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), E
     let mut first = true;
 
     for input in inputs {
-        if input.starts_with(MJI_WRAPPER) && input.ends_with(MJI_WRAPPER) {
+        if MjiMapEntry::is_mji(input) {
             let mji = find(map, input)?;
             pre(f);
             if !first {
@@ -126,6 +130,7 @@ pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), E
             post(f);
         } else {
             write!(f, " {input}").unwrap();
+            first = false;
         }
     }
     post(f);
@@ -133,6 +138,7 @@ pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), E
 }
 
 pub fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
+    let input = input.trim();
     let input = input.strip_prefix(MJI_WRAPPER).unwrap_or(input);
     let input = input.strip_suffix(MJI_WRAPPER).unwrap_or(input);
 
