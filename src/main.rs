@@ -18,12 +18,15 @@ fn main() -> Result<(), anyhow::Error> {
         }
         let inputs = CFG.read().unwrap().inputs.clone();
         let v: Vec<&str> = inputs.iter().map(|x| &**x).collect();
-        // TODO better errors
+
         if CFG.read().unwrap().commit {
             let mut buffer = Vec::<u8>::new();
+
+            // TODO can this call even fail?
             print_error_and_exit!(mji::mjimap::find_or(&mut buffer, &mjimap, &v));
             print_error_and_exit!(mji::mjimap::commit(&buffer));
         } else {
+            // TODO can this call even fail?
             print_error_and_exit!(mji::mjimap::find_or(&mut stdout, &mjimap, &v));
         }
     }
