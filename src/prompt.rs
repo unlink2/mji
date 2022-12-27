@@ -71,7 +71,7 @@ impl Hinter for MjiHinter {
 fn mji_hints(map: &MjiMap) -> HashSet<CommandHint> {
     let mut set = HashSet::new();
     map.iter().for_each(|v| {
-        set.insert(CommandHint::new(&v.1.name, &v.1.name));
+        set.insert(CommandHint::new(&v.1.hint_name(), &v.1.hint_name()));
     });
     set
 }
@@ -96,9 +96,7 @@ pub fn prompt(_f: &mut dyn Write, map: &MjiMap) {
                     .map(|x| x.trim().to_owned())
                     .collect::<Vec<String>>();
 
-                if list.is_empty() || crate::mjimap::find(map, &list[0]).is_err() {
-                    println!("The first word in each commit line must be a valid mji list entry!");
-                } else {
+                if !list.is_empty() {
                     CFG.write().unwrap().inputs.append(&mut list);
                     CFG.write().unwrap().inputs.push("-".into());
                 }
