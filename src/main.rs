@@ -1,6 +1,8 @@
-use mji::{gitmoji::GITMOJI, CFG};
+use mji::{gitmoji::GITMOJI, Error, CFG};
+#[macro_use]
+extern crate mji;
 
-fn main() {
+fn main() -> Result<(), Error> {
     let mut stdout = std::io::stdout().lock();
 
     if CFG.read().unwrap().list {
@@ -14,12 +16,14 @@ fn main() {
         // TODO better errors
         if CFG.read().unwrap().commit {
             let mut buffer = Vec::<u8>::new();
-            mji::mjimap::find_or(&mut buffer, &GITMOJI, &v).unwrap();
-            mji::mjimap::commit(&buffer).unwrap();
+            print_error!(mji::mjimap::find_or(&mut buffer, &GITMOJI, &v));
+            print_error!(mji::mjimap::commit(&buffer));
         } else {
-            mji::mjimap::find_or(&mut stdout, &GITMOJI, &v).unwrap();
+            print_error!(mji::mjimap::find_or(&mut stdout, &GITMOJI, &v));
         }
     }
+
+    Ok(())
 }
 
 #[cfg(test)]

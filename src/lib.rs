@@ -1,3 +1,6 @@
+#![feature(error_generic_member_access)]
+#![feature(provide_any)]
+
 pub mod config;
 pub mod error;
 pub mod gitmoji;
