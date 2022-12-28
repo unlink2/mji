@@ -142,16 +142,11 @@ fn replace_all_mji(map: &MjiMap, input: &str) -> Result<String, Error> {
 pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), Error> {
     header(f)?;
 
-    pre(f);
     for input in inputs {
-        if input == &"-" {
-            post(f);
-            pre(f);
-        } else {
-            print!("{} ", replace_all_mji(map, input)?);
-        }
+        pre(f);
+        write!(f, "{}", replace_all_mji(map, input)?).unwrap();
+        post(f);
     }
-    post(f);
     Ok(())
 }
 
