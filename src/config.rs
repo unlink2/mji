@@ -7,6 +7,7 @@ use std::sync::RwLock;
 use crate::{
     gitmoji::GITMOJI,
     mjimap::{mji_map_from_file, mji_map_join, MjiMap},
+    print_error_and_exit,
 };
 
 lazy_static! {
@@ -104,6 +105,9 @@ pub struct Config {
     #[arg(long, default_value_t = false)]
     pub no_mji_find_error: bool,
 
+    #[arg(long, short)]
+    pub input: Option<String>,
+
     pub inputs: Vec<String>,
 
     #[arg(last = true)]
@@ -112,7 +116,14 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Self {
-        Self::parse()
+        let mut cfg = Self::parse();
+
+        if let Some(input) = &cfg.input.clone() {
+            // FIXME maybe we should not hard crash here...
+            print_error_and_exit!(cfg.input_from_file(&input));
+        }
+
+        cfg
     }
 
     pub fn mji_map(&self) -> anyhow::Result<MjiMap> {
@@ -129,5 +140,10 @@ impl Config {
         } else {
             GITMOJI.clone()
         })
+    }
+
+    pub fn input_from_file(&mut self, path: &str) -> anyhow::Result<()> {
+        self.inputs.push(std::fs::read_to_string(path)?);
+        Ok(())
     }
 }
