@@ -131,7 +131,13 @@ fn replace_all_mji(map: &MjiMap, input: &str) -> Result<String, Error> {
 
     for p in input.split_whitespace() {
         if MjiMapEntry::is_mji(p) {
-            let mji = find(map, p)?;
+            let mji = find(map, p);
+
+            if CFG.read().unwrap().no_mji_find_error && mji.is_err() {
+                continue;
+            }
+            let mji = mji?;
+
             result = result.replace(&mji.hint_name(), &mji.value);
         }
     }
@@ -150,7 +156,7 @@ pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), E
     Ok(())
 }
 
-pub fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
+fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
     let input = input.trim();
     let input = input.strip_prefix(MJI_WRAPPER).unwrap_or(input);
     let input = input.strip_suffix(MJI_WRAPPER).unwrap_or(input);

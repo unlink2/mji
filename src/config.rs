@@ -101,6 +101,9 @@ pub struct Config {
     #[arg(long, default_value_t = false)]
     pub hook: bool,
 
+    #[arg(long, default_value_t = false)]
+    pub no_mji_find_error: bool,
+
     pub inputs: Vec<String>,
 
     #[arg(last = true)]

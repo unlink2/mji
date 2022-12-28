@@ -21,7 +21,7 @@ pub fn hook() -> String {
 # =========================
 COMMIT_MSG_FILE=$1
 
-cat $COMMIT_MSG_FILE | mji -o $COMMIT_MSG_FILE -q
+cat $COMMIT_MSG_FILE | mji -o $COMMIT_MSG_FILE -q --no-mji-find-error
 exit $?
 # =========================
         "
