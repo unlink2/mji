@@ -2,7 +2,7 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum Error {
-    #[error("Not found")]
+    #[error("Emoji not found")]
     NotFound,
     #[error("Command failed")]
     CommandFailed,

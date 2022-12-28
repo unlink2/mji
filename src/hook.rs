@@ -1,15 +1,29 @@
-use std::fmt::Write;
-
-use crate::Error;
-
 // outputs the hook to a string
 // the hook expects one command line input (the commit message)
 // and will modify it by adding the mjis
 pub fn hook() -> String {
-    "".into()
-}
+    "
+#!/bin/sh 
 
-// install the hook the the specified path
-pub fn install_hook(path: &str) -> Result<(), Error> {
-    Ok(())
+# =========================
+# mji commit hook
+# expects commit 
+# message file to be in $1 
+# the source in $2
+# and the sha1 in $3
+# this is intended to be 
+# located in 
+# .git/hooks/prepare-commit-msg
+# or 
+# .git/hooks/commit-msg
+# make sure the hooks
+# are executable!
+# =========================
+COMMIT_MSG_FILE=$1
+
+cat $COMMIT_MSG_FILE | mji -o $COMMIT_MSG_FILE -q
+exit $?
+# =========================
+        "
+    .into()
 }
