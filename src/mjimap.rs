@@ -123,33 +123,40 @@ pub fn header(f: &mut dyn Write) -> Result<(), Error> {
     Ok(())
 }
 
+// tahes an input string, replaces all mjis
+// and returns the result
+// including the pre and postfix
+fn replace_all_mji(map: &MjiMap, input: &str) -> Result<String, Error> {
+    let mut result = input.to_owned();
+
+    for p in input.split_whitespace() {
+        if MjiMapEntry::is_mji(p) {
+            let mji = find(map, p);
+
+            if CFG.read().unwrap().no_mji_find_error && mji.is_err() {
+                continue;
+            }
+            let mji = mji?;
+
+            result = result.replace(&mji.hint_name(), &mji.value);
+        }
+    }
+
+    Ok(result)
+}
+
 pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), Error> {
     header(f)?;
 
-    let mut first = true;
-
     for input in inputs {
-        if MjiMapEntry::is_mji(input) {
-            let mji = find(map, input)?;
-            pre(f);
-            if !first {
-                write!(f, " ").unwrap();
-            }
-            write!(f, "{}", mji.value).unwrap();
-            first = false;
-        } else if input == &"-" {
-            first = true;
-            post(f);
-        } else {
-            write!(f, " {input}").unwrap();
-            first = false;
-        }
+        pre(f);
+        write!(f, "{}", replace_all_mji(map, input)?).unwrap();
+        post(f);
     }
-    post(f);
     Ok(())
 }
 
-pub fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
+fn find(map: &MjiMap, input: &str) -> Result<MjiMapEntry, Error> {
     let input = input.trim();
     let input = input.strip_prefix(MJI_WRAPPER).unwrap_or(input);
     let input = input.strip_suffix(MJI_WRAPPER).unwrap_or(input);

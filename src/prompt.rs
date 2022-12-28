@@ -12,7 +12,7 @@ use std::io::Write;
 macro_rules! print_error_and_exit {
     ($expression:expr) => {
         if let Err(error) = $expression {
-            println!("{}", error);
+            eprintln!("{}", error);
             std::process::exit(-1);
         }
     };
@@ -87,7 +87,9 @@ fn mji_hints(map: &MjiMap) -> HashSet<CommandHint> {
 }
 
 pub fn prompt(_f: &mut dyn Write, map: &MjiMap) {
-    println!("Enter your commit message. Terminate input with CTRL-D.");
+    if !CFG.read().unwrap().quiet {
+        println!("Enter your commit message. Terminate input with CTRL-D.");
+    }
 
     let h = MjiHinter {
         hints: mji_hints(map),
@@ -101,15 +103,7 @@ pub fn prompt(_f: &mut dyn Write, map: &MjiMap) {
             Ok(line) => {
                 rl.add_history_entry(line.as_str());
 
-                let mut list = line
-                    .split_whitespace()
-                    .map(|x| x.trim().to_owned())
-                    .collect::<Vec<String>>();
-
-                if !list.is_empty() {
-                    CFG.write().unwrap().inputs.append(&mut list);
-                    CFG.write().unwrap().inputs.push("-".into());
-                }
+                CFG.write().unwrap().inputs.push(line);
             }
             Err(ReadlineError::Interrupted) => {
                 std::process::exit(0);

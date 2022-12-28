@@ -57,7 +57,7 @@ impl Display for HeaderMode {
     }
 }
 
-#[derive(Parser, Clone)]
+#[derive(Parser, Clone, Default)]
 #[command(author, version, about, long_about = None)]
 pub struct Config {
     #[arg(short, long, default_value_t = false)]
@@ -92,30 +92,22 @@ pub struct Config {
     #[arg(long, default_value_t = get_default_map_path())]
     custom_map_path: String,
 
+    #[arg(long, short)]
+    pub out: Option<String>,
+
+    #[arg(long, short, default_value_t = false)]
+    pub quiet: bool,
+
+    #[arg(long, default_value_t = false)]
+    pub hook: bool,
+
+    #[arg(long, default_value_t = false)]
+    pub no_mji_find_error: bool,
+
     pub inputs: Vec<String>,
 
     #[arg(last = true)]
     pub escaped: Vec<String>,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            list: false,
-            pre: "".into(),
-            post: "".into(),
-            inputs: vec![],
-            header_mode: HeaderMode::Command,
-            header_cmd: "".into(),
-            header_pre: "".into(),
-            header_post: "".into(),
-            commit: false,
-            commit_cmd: "".into(),
-            escaped: vec![],
-            no_join_default_map: false,
-            custom_map_path: "".into(),
-        }
-    }
 }
 
 impl Config {

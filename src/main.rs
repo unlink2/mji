@@ -1,4 +1,4 @@
-use mji::CFG;
+use mji::{hook::hook, CFG};
 #[macro_use]
 extern crate mji;
 
@@ -12,6 +12,8 @@ fn main() -> Result<(), anyhow::Error> {
 
     if CFG.read().unwrap().list {
         mji::mjimap::list(&mut stdout, &mjimap);
+    } else if CFG.read().unwrap().hook {
+        println!("{}", hook());
     } else {
         if CFG.read().unwrap().inputs.is_empty() {
             mji::prompt::prompt(&mut stdout, &mjimap);
@@ -22,11 +24,14 @@ fn main() -> Result<(), anyhow::Error> {
         if CFG.read().unwrap().commit {
             let mut buffer = Vec::<u8>::new();
 
-            // TODO can this call even fail?
             print_error_and_exit!(mji::mjimap::find_or(&mut buffer, &mjimap, &v));
             print_error_and_exit!(mji::mjimap::commit(&buffer));
+        } else if let Some(out) = &CFG.read().unwrap().out {
+            let mut buffer = Vec::<u8>::new();
+
+            print_error_and_exit!(mji::mjimap::find_or(&mut buffer, &mjimap, &v));
+            print_error_and_exit!(std::fs::write(out, buffer));
         } else {
-            // TODO can this call even fail?
             print_error_and_exit!(mji::mjimap::find_or(&mut stdout, &mjimap, &v));
         }
     }
