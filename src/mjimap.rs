@@ -146,7 +146,17 @@ fn replace_all_mji(map: &MjiMap, input: &str) -> Result<String, Error> {
 }
 
 pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), Error> {
-    header(f)?;
+    // FIXME for now we are just checking if the first input stats
+    // with the header prefix to see if it should be added again
+    // this is error-prone though
+    if !inputs
+        .first()
+        .unwrap_or(&"")
+        .trim()
+        .starts_with(&CFG.read().unwrap().header_pre)
+    {
+        header(f)?;
+    }
 
     for input in inputs {
         pre(f);
