@@ -103,7 +103,6 @@ pub fn prompt(_f: &mut dyn Write, map: &MjiMap) {
 
                 if !line.is_empty() {
                     CFG.write().unwrap().inputs.push(line);
-                    CFG.write().unwrap().inputs.push("-".into());
                 }
             }
             Err(ReadlineError::Interrupted) => {
