@@ -4,6 +4,7 @@
 pub mod config;
 pub mod error;
 pub mod gitmoji;
+pub mod hook;
 pub mod mjimap;
 pub mod prompt;
 

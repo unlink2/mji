@@ -101,13 +101,8 @@ pub fn prompt(_f: &mut dyn Write, map: &MjiMap) {
             Ok(line) => {
                 rl.add_history_entry(line.as_str());
 
-                let mut list = line
-                    .split_whitespace()
-                    .map(|x| x.trim().to_owned())
-                    .collect::<Vec<String>>();
-
-                if !list.is_empty() {
-                    CFG.write().unwrap().inputs.append(&mut list);
+                if !line.is_empty() {
+                    CFG.write().unwrap().inputs.push(line);
                     CFG.write().unwrap().inputs.push("-".into());
                 }
             }

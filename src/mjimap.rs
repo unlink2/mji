@@ -123,26 +123,32 @@ pub fn header(f: &mut dyn Write) -> Result<(), Error> {
     Ok(())
 }
 
+// tahes an input string, replaces all mjis
+// and returns the result
+// including the pre and postfix
+fn replace_all_mji(map: &MjiMap, input: &str) -> Result<String, Error> {
+    let mut result = input.to_owned();
+
+    for p in input.split_whitespace() {
+        if MjiMapEntry::is_mji(p) {
+            let mji = find(map, p)?;
+            result = result.replace(&mji.hint_name(), &mji.value);
+        }
+    }
+
+    Ok(result)
+}
+
 pub fn find_or(f: &mut dyn Write, map: &MjiMap, inputs: &[&str]) -> Result<(), Error> {
     header(f)?;
 
-    let mut first = true;
-
+    pre(f);
     for input in inputs {
-        if MjiMapEntry::is_mji(input) {
-            let mji = find(map, input)?;
-            pre(f);
-            if !first {
-                write!(f, " ").unwrap();
-            }
-            write!(f, "{}", mji.value).unwrap();
-            first = false;
-        } else if input == &"-" {
-            first = true;
+        if input == &"-" {
             post(f);
+            pre(f);
         } else {
-            write!(f, " {input}").unwrap();
-            first = false;
+            print!("{} ", replace_all_mji(map, input)?);
         }
     }
     post(f);
