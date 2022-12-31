@@ -1,8 +1,13 @@
-use mji::{hook::hook, CFG};
+use mji::{config::generate_completion, hook::hook, CFG};
 #[macro_use]
 extern crate mji;
 
 fn main() -> Result<(), anyhow::Error> {
+    if let Some(shell) = CFG.read().unwrap().completions {
+        generate_completion(shell);
+        std::process::exit(0);
+    }
+
     let mut stdout = std::io::stdout().lock();
     let mjimap = CFG.read().unwrap().mji_map();
     if mjimap.is_err() {

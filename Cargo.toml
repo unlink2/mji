@@ -12,6 +12,7 @@ repository = "https://github.com/unlink2/mji"
 [dependencies]
 anyhow = "1.0.68"
 clap = { version = "4.0.32", features = ["derive"] }
+clap_complete = "4.0.7"
 console = "0.15.2"
 dirs = "4.0.0"
 lazy_static = "1.4.0"

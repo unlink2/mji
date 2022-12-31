@@ -1,7 +1,7 @@
-use std::fmt::Display;
-
-use clap::{Parser, ValueEnum};
+use clap::{CommandFactory, Parser, ValueEnum};
+use clap_complete::{generate, Generator, Shell};
 use lazy_static::lazy_static;
+use std::fmt::Display;
 use std::sync::RwLock;
 
 use crate::{
@@ -112,6 +112,9 @@ pub struct Config {
 
     #[arg(last = true)]
     pub escaped: Vec<String>,
+
+    #[clap(long, value_name = "SHELL")]
+    pub completions: Option<Shell>,
 }
 
 impl Config {
@@ -146,4 +149,13 @@ impl Config {
         self.inputs.push(std::fs::read_to_string(path)?);
         Ok(())
     }
+}
+
+pub fn generate_completion<G: Generator>(gen: G) {
+    generate(
+        gen,
+        &mut Config::command(),
+        Config::command().get_name(),
+        &mut std::io::stdout(),
+    );
 }
