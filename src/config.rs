@@ -76,7 +76,7 @@ pub struct Config {
     // TODO talk about the icon for a commit header...
     //      reasoning here: a commit is signaled by leaving a
     //      commit message...
-    #[arg(long, default_value_t = String::from("📫 "))]
+    #[arg(long, default_value_t = String::from("🌿 "))]
     pub header_pre: String,
     #[arg(long, default_value_t = String::from("\n"))]
     pub header_post: String,
